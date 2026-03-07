@@ -13,8 +13,7 @@ public class GpsDeviceSimulator {
 
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
             for (int i = 1; i <= 10; i++) {
-                int taskNo = i;
-                executor.submit(() -> GPSData.sendData(taskNo, os, 10000));
+                executor.submit(() -> GPSData.sendData(os, 10000));
             }
 
         }
