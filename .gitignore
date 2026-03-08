@@ -37,3 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 .idea/vcs.xml
+logs/device-data-handler.log
