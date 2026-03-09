@@ -5,11 +5,13 @@ import com.intellifleet.db.service.ProcessInstrumentPacket;
 import com.intellifleet.parser.services.GPSDataParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@ConditionalOnProperty(name = "kafka.enabled", havingValue = "true")
 public class KafkaGPSDataListener {
 
     @Autowired

@@ -43,7 +43,7 @@ public class CgwTcpHandler extends SimpleChannelInboundHandler<String> {
                 metrics.packetReceived();
                 // Example incoming message:
                 // IMEI=123456789012345,LAT=22.5726,LON=88.3639,SPEED=45
-                gpsFileUtility.recevLine(msg);
+//                gpsFileUtility.recevLine(msg);
                 gpsDataPublisher.sendMessageToTopic(msg);
                 System.out.println("Received GPS packet: " + msg);
 //            GpsPacket packet = parse(msg);

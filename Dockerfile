@@ -1,4 +1,4 @@
 FROM eclipse-temurin:21-jdk
-EXPOSE 8080
-COPY target/device-data-handler.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+EXPOSE 8082
+COPY target/device-data-handler.jar device-data-handler-app.jar
+ENTRYPOINT ["java","-jar","/device-data-handler-app.jar"]

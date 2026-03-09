@@ -10,14 +10,16 @@ public class GpsDeviceSimulator {
 
         Socket socket = new Socket("localhost", 9000);
         OutputStream os = socket.getOutputStream();
-
+/*
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
             for (int i = 1; i <= 10; i++) {
                 executor.submit(() -> GPSData.sendData(os, 10000));
             }
 
         }
+*/
 
+        GPSData.sendData(os, 2);
 
 
         socket.close();
