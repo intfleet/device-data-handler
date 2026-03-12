@@ -5,7 +5,7 @@
     <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
 
     <!-- Log Directory -->
-    <property name="LOG_PATH" value="/opt/intellifleet/apps/parser/device-data-handler/logs"/>
+    <property name="LOG_PATH" value="/opt/intellifleet/apps/logs/device-data-handler"/>
 
     <!-- Console Pattern -->
     <property name="CONSOLE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
