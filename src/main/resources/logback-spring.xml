@@ -7,16 +7,14 @@
         Example: if spring.application.name=device-data-handler
         then log file will be device-data-handler.log
     -->
-    <springProperty scope="context"
-                    name="APP_NAME"
-                    source="spring.application.name"/>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
 
     <!--
         Absolute directory path where logs will be stored.
         This directory must exist inside the container OR
         should be mounted from host machine.
     -->
-    <property name="LOG_PATH" value="/opt/intellifleet/apps/device-data-handler/logs"/>
+    <property name="LOG_PATH" value="logging.file.path"/>
 
     <!--
         Log format pattern.
@@ -46,7 +44,7 @@
         Enable detailed logging for your application packages.
         Change DEBUG to INFO in production if needed.
     -->
-    <logger name="com.intellifleet" level="DEBUG"/>
+    <logger name="com.intellifleet" level="INFO"/>
 
     <!-- ============================= -->
     <!-- Console Appender              -->
@@ -56,8 +54,7 @@
         This appender prints logs to console.
         Useful for Docker logs or development environment.
     -->
-    <appender name="CONSOLE"
-              class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 
         <encoder>
             <pattern>${PATTERN}</pattern>
@@ -86,8 +83,7 @@
             Rolling policy defines how log files rotate.
             Here we rotate by both size and date.
         -->
-        <rollingPolicy
-                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <rollingPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 
             <!--
                 Log rotation file pattern.
