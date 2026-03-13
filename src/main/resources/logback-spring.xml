@@ -1,117 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <!-- Application Name -->
-    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
+    <!--
+        Reads the Spring Boot property "spring.application.name"
+        and stores it in variable APP_NAME.
+        Example: if spring.application.name=device-data-handler
+        then log file will be device-data-handler.log
+    -->
+    <springProperty scope="context"
+                    name="APP_NAME"
+                    source="spring.application.name"/>
 
-    <!-- Log Directory -->
-    <property name="LOG_PATH" value="/intellifleet/logs/"/>
+    <!--
+        Absolute directory path where logs will be stored.
+        This directory must exist inside the container OR
+        should be mounted from host machine.
+    -->
+    <property name="LOG_PATH" value="/opt/intellifleet/apps/device-data-handler/logs"/>
 
-    <!-- Console Pattern -->
-    <property name="CONSOLE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+    <!--
+        Log format pattern.
+        %d  -> timestamp
+        %thread -> thread name
+        %-5level -> log level (INFO, ERROR etc.)
+        %logger{36} -> class name
+        %msg -> actual log message
+        %n -> new line
+    -->
+    <property name="PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
 
-    <!-- File Pattern -->
-    <property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger - %msg%n"/>
-
-    <!-- Reduce Spring logs -->
+    <!--
+        Reduce verbosity of Spring framework logs.
+        Only WARN or higher will be logged.
+    -->
     <logger name="org.springframework" level="WARN"/>
 
     <!-- Reduce Hibernate logs -->
     <logger name="org.hibernate" level="WARN"/>
 
-    <!-- Reduce Kafka logs -->
+    <!-- Reduce Kafka client logs -->
     <logger name="org.apache.kafka" level="WARN"/>
-    <logger name="org.springframework.kafka" level="WARN"/>
 
-    <!-- Your application logs -->
+    <!--
+        Enable detailed logging for your application packages.
+        Change DEBUG to INFO in production if needed.
+    -->
     <logger name="com.intellifleet" level="DEBUG"/>
 
     <!-- ============================= -->
-    <!-- Console Appender -->
+    <!-- Console Appender              -->
     <!-- ============================= -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+    <!--
+        This appender prints logs to console.
+        Useful for Docker logs or development environment.
+    -->
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+
         <encoder>
-            <pattern>${CONSOLE_PATTERN}</pattern>
+            <pattern>${PATTERN}</pattern>
         </encoder>
+
     </appender>
 
     <!-- ============================= -->
-    <!-- Application Log File -->
+    <!-- Main Application Log File     -->
     <!-- ============================= -->
+
+    <!--
+        RollingFileAppender writes logs to a file
+        and rotates the file based on size and time.
+    -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
+        <!--
+            Main log file location.
+            Example:
+            /opt/intellifleet/apps/device-data-handler/logs/device-data-handler.log
+        -->
         <file>${LOG_PATH}/${APP_NAME}.log</file>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <!--
+            Rolling policy defines how log files rotate.
+            Here we rotate by both size and date.
+        -->
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 
+            <!--
+                Log rotation file pattern.
+                Example: device-data-handler-2026-03-13.0.log
+            -->
             <fileNamePattern>
                 ${LOG_PATH}/${APP_NAME}-%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
 
-            <maxFileSize>50MB</maxFileSize>
+            <!-- Maximum size of one log file before rotation -->
+            <maxFileSize>100MB</maxFileSize>
+
+            <!-- Keep logs for 30 days -->
             <maxHistory>30</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
+
+            <!-- Maximum total log storage allowed  -->
+            <totalSizeCap>5GB</totalSizeCap>
 
         </rollingPolicy>
 
+        <!-- Apply the log pattern -->
         <encoder>
-            <pattern>${FILE_PATTERN}</pattern>
+            <pattern>${PATTERN}</pattern>
         </encoder>
 
     </appender>
 
     <!-- ============================= -->
-    <!-- ERROR Log File -->
+    <!-- Error Log File                -->
     <!-- ============================= -->
-    <appender name="ERROR_FILE"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
 
+    <!--
+        Separate file for ERROR logs only.
+        Helps quickly identify production issues.
+    -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!-- Error log file path -->
         <file>${LOG_PATH}/${APP_NAME}-error.log</file>
 
+        <!-- Error log rolling policy -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 
+            <!-- Example file name: device-data-handler-error-2026-03-13.0.log -->
             <fileNamePattern>
                 ${LOG_PATH}/${APP_NAME}-error-%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
 
-            <maxFileSize>50MB</maxFileSize>
+            <!-- Rotate when file reaches 100MB -->
+            <maxFileSize>100MB</maxFileSize>
+
+            <!-- Keep error logs for 30 days -->
             <maxHistory>30</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
 
         </rollingPolicy>
 
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <!--
+            Only log messages with ERROR level
+        -->
+        <filter
+                class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
 
+        <!-- Log format -->
         <encoder>
-            <pattern>${FILE_PATTERN}</pattern>
+            <pattern>${PATTERN}</pattern>
         </encoder>
 
     </appender>
 
     <!-- ============================= -->
-    <!-- DEV PROFILE -->
+    <!-- Root Logger Configuration     -->
     <!-- ============================= -->
-    <springProfile name="dev">
 
-        <root level="INFO">
-            <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="FILE"/>
-        </root>
+    <!--
+        Root logger controls logging for entire application.
+        Level INFO means DEBUG logs are ignored unless explicitly enabled.
+    -->
+    <root level="INFO">
 
-    </springProfile>
+        <!-- Print logs in console -->
+        <appender-ref ref="CONSOLE"/>
 
-    <!-- ============================= -->
-    <!-- PROD PROFILE -->
-    <!-- ============================= -->
-    <springProfile name="prod">
+        <!-- Write logs to application file -->
+        <appender-ref ref="FILE"/>
 
-        <root level="INFO">
-            <appender-ref ref="FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
-        </root>
+        <!-- Write error logs separately -->
+        <appender-ref ref="ERROR_FILE"/>
 
-    </springProfile>
+    </root>
 
 </configuration>
