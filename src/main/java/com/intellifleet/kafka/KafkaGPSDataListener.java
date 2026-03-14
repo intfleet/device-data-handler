@@ -1,7 +1,8 @@
 package com.intellifleet.kafka;
 
 
-import com.intellifleet.db.service.ProcessInstrumentPacket;
+import com.intellifleet.service.ProcessInstrumentService;
+import com.intellifleet.service.serviceimpl.ProcessInstrumentPacketImpl;
 import com.intellifleet.parser.services.GPSDataParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class KafkaGPSDataListener {
     GPSDataParser gpsDataParser;
 
     @Autowired
-    ProcessInstrumentPacket processInstrumentPacket;
+    ProcessInstrumentService processInstrumentPacket;
 
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
     public void consumeEvents(String gpsData) {
