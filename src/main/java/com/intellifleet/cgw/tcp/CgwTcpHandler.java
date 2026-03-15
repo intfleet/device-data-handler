@@ -45,7 +45,7 @@ public class CgwTcpHandler extends SimpleChannelInboundHandler<String> {
                 // IMEI=123456789012345,LAT=22.5726,LON=88.3639,SPEED=45
 //                gpsFileUtility.recevLine(msg);
                 gpsDataPublisher.sendMessageToTopic(msg);
-                System.out.println("Received GPS packet: " + msg);
+                System.out.println("CGW Received GPS packet: " + msg);
 //            GpsPacket packet = parse(msg);
 //            System.out.println("Received GPS packet: " + packet);
 

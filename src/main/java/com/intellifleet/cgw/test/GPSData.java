@@ -24,6 +24,15 @@ public class GPSData {
         }
     }
 
+    public void sendOnlyData(OutputStream os, String str) {
+        try {
+            os.write(str.getBytes());
+            os.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void sendData(int taskNo, OutputStream os, int count) {
         try {
             String taskName = "TASK-"+taskNo;
