@@ -8,7 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Service
@@ -21,6 +24,7 @@ public class KafkaGPSDataListener {
     @Autowired
     ProcessInstrumentService processInstrumentPacket;
 
+    private final AtomicLong counter = new AtomicLong();
     long start = 0;
 
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
@@ -35,7 +39,13 @@ public class KafkaGPSDataListener {
             log.info("Execution Time : " + (end - start) + " ms");
         } else {
             processInstrumentPacket.process(gpsDataParser.parse(gpsData, 8080));
+            counter.incrementAndGet();
         }
 
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void report() {
+        log.info("TPS = {}", counter.getAndSet(0));
     }
 }
