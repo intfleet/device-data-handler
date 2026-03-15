@@ -43,7 +43,7 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
     @Override
     public long process(List<InstrumentPacketDTO> instrumentPacketDTOList) {
         try {
-            List<InstrumentFactsEntity> list = instrumentPacketDTOList.stream()
+            instrumentPacketDTOList.parallelStream()
                     .map(instrumentPacketMapper::toEntity)
                     .map(entity -> {
 //                        entity.setTmsInstrument(LocalDateTime.now());
@@ -51,10 +51,8 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
                         entity.setTxtNote("Intellifleet GPS data");
                         return entity;
                     })
-                    .toList();
-//            list.forEach(instrumentFactsRepository::save);
-            instrumentFactsRepository.saveAll(list);
-            return list.size();
+                    .forEach(instrumentFactsRepository::save);
+            return instrumentPacketDTOList.size();
         } catch (Exception ex) {
             log.error("Exception occurred inside process()", ex);
         }

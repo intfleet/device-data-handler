@@ -40,12 +40,16 @@ public class KafkaGPSDataListener {
     }
 */
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data", concurrency = "6")
-    public void consumeBatchEvents(List<String> gpsDatas) {
+    public void consumeBatchEvents(List<String> gpsDataList) {
 //        log.info("Size:: {}", gpsDatas.size());
-        executor.submit(() -> {
-            long size = processInstrumentPacket.process(gpsDatas.stream().map(gpsData -> gpsDataParser.parse(gpsData, 8080)).toList());
-            counter.set(counter.get() + size);
+
+        gpsDataList.forEach(gpsData -> {
+            executor.submit(() -> {
+                processInstrumentPacket.process(gpsDataParser.parse(gpsData, 8080));
+                counter.incrementAndGet();
+            });
         });
+
     }
 
     @Scheduled(fixedRate = 1000)
