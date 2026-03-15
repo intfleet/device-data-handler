@@ -26,7 +26,7 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
     @Override
     public void process(InstrumentPacketDTO instrumentPacketDTO) {
         try {
-            log.info(instrumentPacketDTO.toString());
+//            log.info(instrumentPacketDTO.toString());
             InstrumentFactsEntity entity = instrumentPacketMapper.toEntity(instrumentPacketDTO);
             entity.setTmsInstrument(LocalDateTime.now());
             entity.setTmsCreate(LocalDateTime.now());
