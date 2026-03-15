@@ -30,22 +30,14 @@ public class KafkaGPSDataListener {
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
     public void consumeEvents(String gpsData) {
 //        log.info("Consumer consume the message {} ", gpsData);
-        if(gpsData.trim().startsWith("START")){
-            log.info("Started executing....");
-            start = System.currentTimeMillis();
-        } else if(gpsData.trim().startsWith("END")){
-            long end = System.currentTimeMillis();
-            log.info("End execution....");
-            log.info("Execution Time : " + (end - start) + " ms");
-        } else {
-            processInstrumentPacket.process(gpsDataParser.parse(gpsData, 8080));
-            counter.incrementAndGet();
-        }
-
+        processInstrumentPacket.process(gpsDataParser.parse(gpsData, 8080));
+        counter.incrementAndGet();
     }
 
     @Scheduled(fixedRate = 1000)
     public void report() {
-        log.info("TPS = {}", counter.getAndSet(0));
+        if(counter.get() > 0) {
+            log.info("TPS = {}", counter.getAndSet(0));
+        }
     }
 }
