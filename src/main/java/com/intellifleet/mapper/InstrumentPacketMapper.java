@@ -2,6 +2,7 @@ package com.intellifleet.mapper;
 
 import com.intellifleet.entity.InstrumentFactsEntity;
 import com.intellifleet.parser.dto.InstrumentPacketDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -20,7 +21,7 @@ public interface InstrumentPacketMapper {
         if (value == null) {
             return null;
         }
-        return LocalDateTime.parse(value, DateTimeFormatter.ofPattern("yyMMddHHmmss"));
+        return LocalDateTime.parse(StringUtils.left(value, 12), DateTimeFormatter.ofPattern("yyMMddHHmmss"));
     }
 
 }
