@@ -46,7 +46,7 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
             List<InstrumentFactsEntity> list = instrumentPacketDTOList.stream()
                     .map(instrumentPacketMapper::toEntity)
                     .map(entity -> {
-                        entity.setTmsInstrument(LocalDateTime.now());
+//                        entity.setTmsInstrument(LocalDateTime.now());
                         entity.setTmsCreate(LocalDateTime.now());
                         entity.setTxtNote("Intellifleet GPS data");
                         return entity;

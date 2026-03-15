@@ -1,5 +1,6 @@
 package com.intellifleet.parser.services;
 
+import com.intellifleet.cgw.test.GPSData;
 import com.intellifleet.parser.config.PacketMappingConfig;
 import com.intellifleet.parser.dto.InstrumentConfigDTO;
 import com.intellifleet.parser.dto.InstrumentPacketBuilderWrapperDTO;
@@ -56,6 +57,13 @@ public class GPSDataParser {
                 builder.numLatitude()+","+builder.numLongitude()
         );
 
+        int dateIndex = device.getFieldIndexes().get("date");
+        String date = result.values()[dateIndex];
+
+        int timeIndex = device.getFieldIndexes().get("time");
+        String time = result.values()[timeIndex];
+
+        builder.tmsInstrument(dateIndex+time);
         return builder.build();
     }
 

@@ -19,16 +19,16 @@ public class GpsDeviceSimulator {
             List<Future<?>> futures = new ArrayList<>();
 
             long start = System.currentTimeMillis();
-            GPSData.sendOnlyData(os, "START\n");
-            for (int i = 1; i <= 10; i++) {
-                Future<?> submit = executor.submit(() -> GPSData.sendData(os, 10000));
+
+            for (int i = 1; i <= 1000; i++) {
+                Future<?> submit = executor.submit(() -> GPSData.sendData(os, 59));
             }
 
             // wait for all threads complete
             for (Future<?> future : futures) {
                 future.get();
             }
-            GPSData.sendOnlyData(os, "END\n");
+
             long end = System.currentTimeMillis();
 
             System.out.println("All threads completed");
