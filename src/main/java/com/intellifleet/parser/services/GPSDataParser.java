@@ -63,7 +63,7 @@ public class GPSDataParser {
         int timeIndex = device.getFieldIndexes().get("time");
         String time = result.values()[timeIndex];
 
-        builder.tmsInstrument(dateIndex+time);
+        builder.tmsInstrument(date+time);
         return builder.build();
     }
 
