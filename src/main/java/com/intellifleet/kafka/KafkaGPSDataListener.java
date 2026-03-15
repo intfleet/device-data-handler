@@ -25,12 +25,14 @@ public class KafkaGPSDataListener {
 
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
     public void consumeEvents(String gpsData) {
-        log.info("Consumer consume the message {} ", gpsData);
+//        log.info("Consumer consume the message {} ", gpsData);
         if("START".equalsIgnoreCase(gpsData)){
+            log.info("Started executing....");
             start = System.currentTimeMillis();
         } else if("END".equalsIgnoreCase(gpsData)){
             long end = System.currentTimeMillis();
-            System.out.println("Execution Time : " + (end - start) + " ms");
+            log.info("End execution....");
+            log.info("Execution Time : " + (end - start) + " ms");
         } else {
             processInstrumentPacket.process(gpsDataParser.parse(gpsData, 8080));
         }

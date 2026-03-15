@@ -32,7 +32,7 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
             entity.setTmsCreate(LocalDateTime.now());
             entity.setTxtNote("Intellifleet GPS data");
             instrumentFactsRepository.save(entity);
-            log.info("Saved Entity: {}", entity);
+//            log.info("Saved Entity: {}", entity);
             //Need to add here db insertion process...........
         } catch (Exception ex) {
             log.error("Exception occurred inside process()", ex);
