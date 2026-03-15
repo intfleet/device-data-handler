@@ -14,7 +14,8 @@
         This directory must exist inside the container OR
         should be mounted from host machine.
     -->
-    <property name="LOG_PATH" value="logging.file.path"/>
+<!--    <property name="LOG_PATH" value="logging.file.path"/>-->
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path"/>
 
     <!--
         Log format pattern.
