@@ -52,8 +52,8 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
                         return entity;
                     })
                     .toList();
-            list.forEach(instrumentFactsRepository::save);
-//            instrumentFactsRepository.saveAll(list);
+//            list.forEach(instrumentFactsRepository::save);
+            instrumentFactsRepository.saveAll(list);
             return list.size();
         } catch (Exception ex) {
             log.error("Exception occurred inside process()", ex);

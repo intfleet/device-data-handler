@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 public class InstrumentFactsEntity {
 
-    @Column(name = "row_wid", insertable = false)
+    @Column(name = "row_wid", insertable = false,updatable = false)
     private Long rowWid;
 
     @Id
