@@ -37,6 +37,7 @@ public class KafkaGPSDataListener {
 */
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
     public void consumeBatchEvents(List<String> gpsDatas) {
+        log.info(gpsDatas.toString());
         long size = processInstrumentPacket.process(gpsDatas.stream().map(gpsData -> gpsDataParser.parse(gpsData, 8080)).toList());
         counter.set(counter.get() + size);
     }
