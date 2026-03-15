@@ -25,7 +25,7 @@ public class KafkaGPSDataListener {
 
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
     public void consumeEvents(String gpsData) {
-        log.info("Consumer consume the message {} ", gpsData);
+//        log.info("Consumer consume the message {} ", gpsData);
         if(gpsData.trim().startsWith("START")){
             log.info("Started executing....");
             start = System.currentTimeMillis();
