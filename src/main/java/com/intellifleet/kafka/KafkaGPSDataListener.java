@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
@@ -25,6 +27,8 @@ public class KafkaGPSDataListener {
     @Autowired
     ProcessInstrumentService processInstrumentPacket;
 
+    private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+
     private final AtomicLong counter = new AtomicLong();
     long start = 0;
 /*
@@ -35,11 +39,13 @@ public class KafkaGPSDataListener {
         counter.incrementAndGet();
     }
 */
-    @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
+    @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data", concurrency = "6")
     public void consumeBatchEvents(List<String> gpsDatas) {
-        log.info("Size:: {}", gpsDatas.size());
-        long size = processInstrumentPacket.process(gpsDatas.stream().map(gpsData -> gpsDataParser.parse(gpsData, 8080)).toList());
-        counter.set(counter.get() + size);
+//        log.info("Size:: {}", gpsDatas.size());
+        executor.submit(() -> {
+            long size = processInstrumentPacket.process(gpsDatas.stream().map(gpsData -> gpsDataParser.parse(gpsData, 8080)).toList());
+            counter.set(counter.get() + size);
+        });
     }
 
     @Scheduled(fixedRate = 1000)
