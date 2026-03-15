@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
@@ -26,12 +27,18 @@ public class KafkaGPSDataListener {
 
     private final AtomicLong counter = new AtomicLong();
     long start = 0;
-
+/*
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
     public void consumeEvents(String gpsData) {
 //        log.info("Consumer consume the message {} ", gpsData);
         processInstrumentPacket.process(gpsDataParser.parse(gpsData, 8080));
         counter.incrementAndGet();
+    }
+*/
+    @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data")
+    public void consumeBatchEvents(List<String> gpsDatas) {
+        long size = processInstrumentPacket.process(gpsDatas.stream().map(gpsData -> gpsDataParser.parse(gpsData, 8080)).toList());
+        counter.set(counter.get() + size);
     }
 
     @Scheduled(fixedRate = 1000)

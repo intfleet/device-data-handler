@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -37,5 +38,25 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
         } catch (Exception ex) {
             log.error("Exception occurred inside process()", ex);
         }
+    }
+
+    @Override
+    public long process(List<InstrumentPacketDTO> instrumentPacketDTOList) {
+        try {
+            List<InstrumentFactsEntity> list = instrumentPacketDTOList.stream()
+                    .map(instrumentPacketMapper::toEntity)
+                    .map(entity -> {
+                        entity.setTmsInstrument(LocalDateTime.now());
+                        entity.setTmsCreate(LocalDateTime.now());
+                        entity.setTxtNote("Intellifleet GPS data");
+                        return entity;
+                    })
+                    .toList();
+            instrumentFactsRepository.saveAll(list);
+            return list.size();
+        } catch (Exception ex) {
+            log.error("Exception occurred inside process()", ex);
+        }
+        return 0;
     }
 }
