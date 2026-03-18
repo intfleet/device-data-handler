@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: device-data-handler
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: device-data-handler
+
+  template:
+    metadata:
+      labels:
+        app: device-data-handler
+
+    spec:
+      containers:
+        - name: device-data-handler
+          image: device-data-handler-image:IMAGE_TAG
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8082
+            - containerPort: 9000
+
+          volumeMounts:
+            - mountPath: /opt/logs/device-data-handler
+              name: log-volume
+
+      volumes:
+        - name: log-volume
+          hostPath:
+            path: /opt/intellifleet/apps/device-data-handler/logs

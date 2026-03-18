@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = 'ap-south-1'
+        REPO_URL = 'https://github.com/intfleet/device-data-handler'
+        BRANCH = 'feature/dev-01'
+
+        IMAGE_NAME = 'device-data-handler-image'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+
+        DOCKER_REPO = 'your-dockerhub-username/device-data-handler-image'
+
+        K8S_NAMESPACE = 'default'
+    }
+
+    tools {
+        maven 'Maven-3.9'
+    }
+
+    stages {
+
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Source Code') {
+            steps {
+                git branch: "${BRANCH}", url: "${REPO_URL}"
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                sh '''
+                mvn clean package -DskipTests
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t $DOCKER_REPO:$IMAGE_TAG .
+                '''
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh '''
+                docker push $DOCKER_REPO:$IMAGE_TAG
+                '''
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                kubectl set image deployment/device-data-handler \
+                device-data-handler=$IMAGE_NAME:$IMAGE_TAG -n $K8S_NAMESPACE || \
+                kubectl apply -f k8s/deployment.yaml -n $K8S_NAMESPACE
+
+                kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
+                '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                kubectl get pods -n $K8S_NAMESPACE
+                kubectl get svc -n $K8S_NAMESPACE
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Application deployed successfully 🚀'
+        }
+        failure {
+            echo 'Deployment failed ❌'
+        }
+    }
+}
