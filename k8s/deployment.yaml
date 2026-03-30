@@ -29,9 +29,7 @@ spec:
 
           ports:
             - containerPort: 8082
-              hostPort: 8081
             - containerPort: 9000
-              hostPort: 9000
 
           volumeMounts:
             - mountPath: /opt/logs/device-data-handler
