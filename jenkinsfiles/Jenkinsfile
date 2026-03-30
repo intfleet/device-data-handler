@@ -55,17 +55,15 @@ pipeline {
             steps {
                 sh '''
                 echo "Deploy to Kubernetes"
-                # export KUBECONFIG=/root/.kube/config
 
-                # kubectl apply -f k8s/deployment.yaml -n $K8S_NAMESPACE
-                # kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
+                export KUBECONFIG=/var/lib/jenkins/.kube/config
 
-                sudo kubectl set image deployment/device-data-handler \
-                device-data-handler=$IMAGE_NAME:$IMAGE_TAG -n $K8S_NAMESPACE
+                sed -i "s/IMAGE_TAG/${BUILD_NUMBER}/g" deployment.yml
 
-                kubectl rollout restart deployment/device-data-handler -n default
-
+                kubectl apply -f k8s/deployment.yaml -n $K8S_NAMESPACE
                 kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
+
+                kubectl rollout status deployment/device-data-handler
                 '''
             }
         }

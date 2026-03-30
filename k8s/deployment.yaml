@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: device-data-handler
-          image: device-data-handler-image:latest
+          image: device-data-handler-image:IMAGE_TAG
           imagePullPolicy: Never
 
           ports:
