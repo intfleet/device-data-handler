@@ -33,3 +33,4 @@ spec:
         - name: log-volume
           hostPath:
             path: /opt/intellifleet/apps/device-data-handler/logs
+            type: DirectoryOrCreate
