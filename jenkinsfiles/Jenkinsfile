@@ -55,8 +55,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Deploy to Kubernetes"
-                kubectl --kubeconfig=/root/.kube/config
-                
+                export KUBECONFIG=/root/.kube/config
+
                 # kubectl apply -f k8s/deployment.yaml -n $K8S_NAMESPACE
                 # kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
 
