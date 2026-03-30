@@ -7,8 +7,6 @@ spec:
   selector:
     app: device-data-handler
 
-  type: NodePort
-
   ports:
     - name: app-port
       port: 8081
@@ -19,3 +17,5 @@ spec:
       port: 9000
       targetPort: 9000
       nodePort: 30900
+
+  type: NodePort
