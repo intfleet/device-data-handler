@@ -35,6 +35,7 @@ pipeline {
         stage('Build Application') {
             steps {
                 sh '''
+                echo "Build Application"
                 mvn clean package -DskipTests
                 '''
             }
@@ -43,6 +44,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
+                echo "Build Docker Image"
                 docker build -t $IMAGE_NAME:$IMAGE_TAG .
                 docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
                 '''
@@ -52,9 +54,12 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                kubectl set image deployment/device-data-handler \
-                device-data-handler=$IMAGE_NAME:$IMAGE_TAG -n $K8S_NAMESPACE || \
+                echo "Deploy to Kubernetes"
                 kubectl apply -f k8s/deployment.yaml -n $K8S_NAMESPACE
+                kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
+
+                kubectl set image deployment/device-data-handler \
+                device-data-handler=$IMAGE_NAME:$IMAGE_TAG -n $K8S_NAMESPACE
 
                 kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
                 '''
@@ -64,6 +69,7 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 sh '''
+                echo "Verify Deployment"
                 kubectl get pods -n $K8S_NAMESPACE
                 kubectl get svc -n $K8S_NAMESPACE
                 '''
