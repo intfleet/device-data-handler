@@ -9,7 +9,9 @@ spec:
     - name: app-port
       port: 8081
       targetPort: 8082
+      nodePort: 8081
     - name: cgw-port
       port: 9000
       targetPort: 9000
+      nodePort: 9000
   type: NodePort
