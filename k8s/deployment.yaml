@@ -19,7 +19,7 @@ spec:
       containers:
         - name: device-data-handler
           image: device-data-handler-image:IMAGE_TAG
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 8082
