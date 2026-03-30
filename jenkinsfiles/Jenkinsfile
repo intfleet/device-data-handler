@@ -56,7 +56,7 @@ pipeline {
                 sh '''
                 echo "Importing docker image as .tar file..."
                 docker save $IMAGE_NAME:latest -o k8s/device-data-handler.tar
-                ctr -n k8s.io images import k8s/device-data-handler.tar
+                sudo ctr -n k8s.io images import k8s/device-data-handler.tar
 
 
                 echo "Deploy to Kubernetes"
