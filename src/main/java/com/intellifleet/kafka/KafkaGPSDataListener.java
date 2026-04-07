@@ -53,6 +53,8 @@ public class KafkaGPSDataListener {
 
     @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data-redis", concurrency = "6")
     public void consumeBatchEventsForRedis(List<String> gpsDataList) {
+        log.info("Size:: {}", gpsDataList.size());
+        log.info("gpsDataList:: {}", gpsDataList);
         gpsDataList.forEach(gpsData -> {
             executor.submit(() -> {
                 processInstrumentPacket.processToAddOnRedis(gpsDataParser.parse(gpsData, 8080));

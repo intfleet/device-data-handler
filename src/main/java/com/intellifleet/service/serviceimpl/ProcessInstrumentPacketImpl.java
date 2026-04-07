@@ -61,7 +61,7 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
 
     @Override
     public InstrumentPacketForRedisDTO processToAddOnRedis(InstrumentPacketDTO instrumentPacketDTO) {
-
+        log.info("instrumentPacketDTO: {}", instrumentPacketDTO.toString());
         return InstrumentPacketForRedisDTO.builder()
                 .instrumentId(instrumentPacketDTO.txtInstrumentId())
                 .resources(instrumentPacketDTO.txtResources())
