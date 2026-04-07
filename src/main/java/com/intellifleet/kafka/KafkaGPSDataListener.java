@@ -49,7 +49,15 @@ public class KafkaGPSDataListener {
                 counter.incrementAndGet();
             });
         });
+    }
 
+    @KafkaListener(topics = "topic-gps-data", groupId = "group-gps-data-redis", concurrency = "6")
+    public void consumeBatchEventsForRedis(List<String> gpsDataList) {
+        gpsDataList.forEach(gpsData -> {
+            executor.submit(() -> {
+                processInstrumentPacket.processToAddOnRedis(gpsDataParser.parse(gpsData, 8080));
+            });
+        });
     }
 
     @Scheduled(fixedRate = 1000)

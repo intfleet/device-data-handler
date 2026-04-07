@@ -4,12 +4,12 @@ package com.intellifleet.service.serviceimpl;
 import com.intellifleet.entity.InstrumentFactsEntity;
 import com.intellifleet.mapper.InstrumentPacketMapper;
 import com.intellifleet.parser.dto.InstrumentPacketDTO;
+import com.intellifleet.parser.dto.InstrumentPacketForRedisDTO;
 import com.intellifleet.repository.InstrumentFactsRepository;
 import com.intellifleet.service.ProcessInstrumentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -57,5 +57,17 @@ public class ProcessInstrumentPacketImpl implements ProcessInstrumentService {
             log.error("Exception occurred inside process()", ex);
         }
         return 0;
+    }
+
+    @Override
+    public InstrumentPacketForRedisDTO processToAddOnRedis(InstrumentPacketDTO instrumentPacketDTO) {
+
+        return InstrumentPacketForRedisDTO.builder()
+                .instrumentId(instrumentPacketDTO.txtInstrumentId())
+                .resources(instrumentPacketDTO.txtResources())
+                .tmsInstrument(instrumentPacketDTO.tmsInstrument())
+                .latitude(instrumentPacketDTO.numLatitude())
+                .longitude(instrumentPacketDTO.numLongitude())
+                .build();
     }
 }
