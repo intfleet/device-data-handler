@@ -8,6 +8,7 @@ import com.intellifleet.parser.dto.InstrumentPacketDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -23,8 +24,8 @@ public class GPSDataParser {
             "txt_resources", InstrumentPacketBuilderWrapperDTO::txtResources,
             "tms_instrument", InstrumentPacketBuilderWrapperDTO::tmsInstrument,
 
-            "num_latitude",(b,v)->b.numLatitude(Double.parseDouble(v)),
-            "num_longitude",(b,v)->b.numLongitude(Double.parseDouble(v)),
+            "num_latitude",(b,v)->b.numLatitude(new BigDecimal(v)),
+            "num_longitude",(b,v)->b.numLongitude(new BigDecimal(v)),
 
             "int_current_speed",(b,v)->b.intCurrentSpeed((int)Double.parseDouble(v))
     );

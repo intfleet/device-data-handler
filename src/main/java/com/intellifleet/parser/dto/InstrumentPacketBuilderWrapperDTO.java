@@ -1,11 +1,13 @@
 package com.intellifleet.parser.dto;
 
+import java.math.BigDecimal;
+
 public class InstrumentPacketBuilderWrapperDTO {
     private final InstrumentPacketDTO.InstrumentPacketDTOBuilder builder =
             InstrumentPacketDTO.builder();
 
-    private Double lat;
-    private Double lon;
+    private BigDecimal lat;
+    private BigDecimal lon;
 
     public void txtInstrumentId(String v){ builder.txtInstrumentId(v); }
 
@@ -13,12 +15,12 @@ public class InstrumentPacketBuilderWrapperDTO {
 
     public void tmsInstrument(String v){ builder.tmsInstrument(v); }
 
-    public void numLatitude(Double v){
+    public void numLatitude(BigDecimal v){
         lat=v;
         builder.numLatitude(v);
     }
 
-    public void numLongitude(Double v){
+    public void numLongitude(BigDecimal v){
         lon=v;
         builder.numLongitude(v);
     }
@@ -29,9 +31,9 @@ public class InstrumentPacketBuilderWrapperDTO {
 
     public void txtLocationDetails(String v){ builder.txtLocationDetails(v); }
 
-    public Double numLatitude(){ return lat; }
+    public BigDecimal numLatitude(){ return lat; }
 
-    public Double numLongitude(){ return lon; }
+    public BigDecimal numLongitude(){ return lon; }
 
     public InstrumentPacketDTO build(){
         return builder.build();
