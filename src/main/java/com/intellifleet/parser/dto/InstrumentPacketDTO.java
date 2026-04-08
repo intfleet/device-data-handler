@@ -2,6 +2,8 @@ package com.intellifleet.parser.dto;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
+
 @Builder
 public record InstrumentPacketDTO (
 
@@ -9,8 +11,8 @@ public record InstrumentPacketDTO (
         String txtResources,
         String tmsInstrument,
 
-        Double numLatitude,
-        Double numLongitude,
+        BigDecimal numLatitude,
+        BigDecimal numLongitude,
 
         Integer intCurrentSpeed,
 

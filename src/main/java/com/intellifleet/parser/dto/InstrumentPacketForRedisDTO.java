@@ -2,14 +2,16 @@ package com.intellifleet.parser.dto;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
+
 @Builder
 public record InstrumentPacketForRedisDTO(
         String instrumentId,
         String resources,
         String tmsInstrument,
 
-        Double latitude,
-        Double longitude
+        BigDecimal latitude,
+        BigDecimal longitude
 
 ) {
 }
